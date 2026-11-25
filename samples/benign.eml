@@ -1,0 +1,18 @@
+Return-Path: <notifications@github.com>
+Received: from out-21.smtp.github.com (out-21.smtp.github.com [192.30.252.204])
+	by mx.corp-example.com with ESMTPS id 99ab; Fri, 20 Nov 2026 10:02:11 +0000
+Authentication-Results: mx.corp-example.com;
+	spf=pass smtp.mailfrom=github.com;
+	dkim=pass header.d=github.com;
+	dmarc=pass header.from=github.com
+From: "GitHub" <notifications@github.com>
+To: <jsmith@corp-example.com>
+Subject: [tool_soc] New comment on pull request
+Date: Fri, 20 Nov 2026 10:02:09 +0000
+Message-ID: <tool_soc/pull/3/c1@github.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+
+A new comment was posted on your pull request.
+
+View it on GitHub: https://github.com/example/tool_soc/pull/3

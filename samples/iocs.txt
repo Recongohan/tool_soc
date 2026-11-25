@@ -1,0 +1,9 @@
+# IOCs from a threat report (defanged, as you'd receive them)
+45.33.32[.]156
+hxxp://185.193.88[.]4/paypal/signin/verify.php
+paypa1-secure[.]com
+qx7kzv9pwr2m[.]top
+exfil-cdn[.]net
+10.0.1.15
+44d88612fea8a8f36de82e1278abb02f
+CVE-2021-44228

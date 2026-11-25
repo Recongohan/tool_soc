@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SOC Toolkit</title>
+  <meta name="description" content="Local triage and threat-hunting toolkit for SOC analysts.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="theme.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Z"/><path class="brand-pulse" d="M7 12h2.5l1.5-3 2 6 1.5-3H17"/></svg>
+      <span class="brand-name">SOC Toolkit</span>
+      <span class="brand-version" id="version"></span>
+    </div>
+    <div class="topbar-actions">
+      <span class="local-pill" title="Everything runs on this machine. Nothing is uploaded unless you enable online lookups.">
+        <span class="dot" aria-hidden="true"></span>Local only
+      </span>
+      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch to light theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-moon"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg viewBox="0 0 24 24" aria-hidden="true" class="icon-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar" aria-label="Tools">
+      <p class="nav-group">Investigate</p>
+      <ul>
+        <li><a href="#hunt" data-view="hunt"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Log hunt</a></li>
+        <li><a href="#phish" data-view="phish"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Phishing email</a></li>
+        <li><a href="#enrich" data-view="enrich"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>IOC enrichment</a></li>
+        <li><a href="#extract" data-view="extract"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><path d="m17 15 3 3-3 3"/></svg>IOC extractor</a></li>
+        <li><a href="#decode" data-view="decode"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg>Decoder</a></li>
+      </ul>
+      <p class="nav-group">Reference</p>
+      <ul>
+        <li><a href="#rules" data-view="rules"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l3 3v13H5z"/><path d="M9 10h6M9 14h6"/></svg>Detection rules</a></li>
+      </ul>
+    </nav>
+
+    <main id="main" tabindex="-1">
+      <!-- LOG HUNT -->
+      <section class="view" id="view-hunt" aria-labelledby="h-hunt" hidden>
+        <header class="view-head">
+          <h1 id="h-hunt">Log hunt</h1>
+          <p>Run detections over DNS, web server, authentication or connection logs. Every finding is mapped to MITRE ATT&amp;CK.</p>
+        </header>
+        <form class="card input-card" id="form-hunt" novalidate>
+          <fieldset class="segmented" id="hunt-kind">
+            <legend>Log type</legend>
+          </fieldset>
+          <p class="hint" id="hunt-hint"></p>
+          <div class="dropzone" data-for="hunt">
+            <input type="file" id="hunt-file" class="visually-hidden">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+            <p><label for="hunt-file" class="link-btn">Choose a log file</label> or drag it here</p>
+            <p class="file-status" aria-live="polite"></p>
+          </div>
+          <details class="paste">
+            <summary>Or paste log lines</summary>
+            <label class="visually-hidden" for="hunt-paste">Log lines</label>
+            <textarea id="hunt-paste" rows="6" spellcheck="false" placeholder="timestamp,src_ip,query,qtype,rcode,resolver&#10;2026-11-20T10:00:01Z,10.0.1.15,aGVsbG8...exfil.example.net,TXT,NOERROR,10.0.0.53"></textarea>
+          </details>
+          <details class="advanced">
+            <summary>Tuning &amp; allowlist</summary>
+            <div class="threshold-grid" id="hunt-thresholds"></div>
+            <div class="field-row">
+              <div class="field">
+                <label for="hunt-allow">Allowlist <span class="opt">domains or IPs to ignore, one per line</span></label>
+                <textarea id="hunt-allow" rows="3" spellcheck="false" placeholder="scanner.corp.example&#10;10.0.5.5"></textarea>
+              </div>
+              <div class="field" id="resolver-field">
+                <label for="hunt-resolvers">Corporate resolvers <span class="opt">blank = any private IP is trusted</span></label>
+                <textarea id="hunt-resolvers" rows="3" spellcheck="false" placeholder="10.0.0.53"></textarea>
+              </div>
+            </div>
+          </details>
+          <div class="actions">
+            <button type="submit" class="btn primary" id="hunt-run">Run hunt <kbd>Ctrl ↵</kbd></button>
+            <button type="button" class="btn ghost" id="hunt-sample">Load sample data</button>
+          </div>
+        </form>
+        <div class="results" id="results-hunt"></div>
+      </section>
+
+      <!-- PHISH -->
+      <section class="view" id="view-phish" aria-labelledby="h-phish" hidden>
+        <header class="view-head">
+          <h1 id="h-phish">Phishing email</h1>
+          <p>Triage a reported email: SPF/DKIM/DMARC, sender mismatches, lookalike domains, deceptive links and dangerous attachments.</p>
+        </header>
+        <form class="card input-card" id="form-phish" novalidate>
+          <div class="dropzone" data-for="phish">
+            <input type="file" id="phish-file" class="visually-hidden" accept=".eml,.txt,message/rfc822">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+            <p><label for="phish-file" class="link-btn">Choose an .eml file</label> or drag it here</p>
+            <p class="hint">In Outlook: open the email → File → Save As → .eml (or "Show original" in Gmail and save).</p>
+            <p class="file-status" aria-live="polite"></p>
+          </div>
+          <details class="paste">
+            <summary>Or paste the raw message source</summary>
+            <label class="visually-hidden" for="phish-paste">Raw email source</label>
+            <textarea id="phish-paste" rows="8" spellcheck="false" placeholder="Return-Path: <...>&#10;Received: from ...&#10;From: ...&#10;Subject: ..."></textarea>
+          </details>
+          <div class="actions">
+            <button type="submit" class="btn primary" id="phish-run">Analyse email <kbd>Ctrl ↵</kbd></button>
+            <button type="button" class="btn ghost" data-sample="phish">Phishing sample</button>
+            <button type="button" class="btn ghost" data-sample="benign">Benign sample</button>
+          </div>
+        </form>
+        <div class="results" id="results-phish"></div>
+      </section>
+
+      <!-- ENRICH -->
+      <section class="view" id="view-enrich" aria-labelledby="h-enrich" hidden>
+        <header class="view-head">
+          <h1 id="h-enrich">IOC enrichment</h1>
+          <p>IPs, domains, URLs, hashes and CVEs - defanged input is fine. Offline heuristics always run; reputation lookups are opt-in.</p>
+        </header>
+        <form class="card input-card" id="form-enrich" novalidate>
+          <div class="field">
+            <label for="enrich-values">Indicators <span class="opt">one per line</span></label>
+            <textarea id="enrich-values" rows="7" spellcheck="false" placeholder="45.33.32[.]156&#10;paypa1-secure[.]com&#10;hxxp://185.193.88[.]4/login.php&#10;44d88612fea8a8f36de82e1278abb02f"></textarea>
+          </div>
+          <label class="check">
+            <input type="checkbox" id="enrich-online">
+            <span>Query VirusTotal / AbuseIPDB <span class="opt" id="online-note"></span></span>
+          </label>
+          <div class="actions">
+            <button type="submit" class="btn primary">Enrich <kbd>Ctrl ↵</kbd></button>
+            <button type="button" class="btn ghost" data-sample="iocs">Load sample IOCs</button>
+          </div>
+        </form>
+        <div class="results" id="results-enrich"></div>
+      </section>
+
+      <!-- EXTRACT -->
+      <section class="view" id="view-extract" aria-labelledby="h-extract" hidden>
+        <header class="view-head">
+          <h1 id="h-extract">IOC extractor</h1>
+          <p>Paste a threat report, email or alert. Get every IP, domain, URL, email, hash and CVE - deduplicated and ready to defang.</p>
+        </header>
+        <form class="card input-card" id="form-extract" novalidate>
+          <div class="field">
+            <label for="extract-text">Text</label>
+            <textarea id="extract-text" rows="9" spellcheck="false" placeholder="The actor staged payloads at hxxps://cdn-update[.]top/a.bin (sha256 ...) and used 185.220.101[.]5 for C2. CVE-2024-3400 was exploited..."></textarea>
+          </div>
+          <label class="check"><input type="checkbox" id="extract-private"><span>Keep private / internal IPs</span></label>
+          <div class="actions">
+            <button type="submit" class="btn primary">Extract <kbd>Ctrl ↵</kbd></button>
+          </div>
+        </form>
+        <div class="results" id="results-extract"></div>
+      </section>
+
+      <!-- DECODE -->
+      <section class="view" id="view-decode" aria-labelledby="h-decode" hidden>
+        <header class="view-head">
+          <h1 id="h-decode">Decoder</h1>
+          <p>Peel back Base64, PowerShell <code>-EncodedCommand</code>, URL and hex encoding - layer by layer - and pull IOCs from the result.</p>
+        </header>
+        <form class="card input-card" id="form-decode" novalidate>
+          <div class="field">
+            <label for="decode-text">Encoded string or full command line</label>
+            <textarea id="decode-text" rows="6" spellcheck="false" placeholder="powershell.exe -nop -w hidden -enc SQBFAFgAIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQA..."></textarea>
+          </div>
+          <div class="actions">
+            <button type="submit" class="btn primary">Decode <kbd>Ctrl ↵</kbd></button>
+            <button type="button" class="btn ghost" id="decode-sample">Try an example</button>
+          </div>
+        </form>
+        <div class="results" id="results-decode"></div>
+      </section>
+
+      <!-- RULES -->
+      <section class="view" id="view-rules" aria-labelledby="h-rules" hidden>
+        <header class="view-head">
+          <h1 id="h-rules">Detection rules</h1>
+          <p>Everything the toolkit can detect and the ATT&amp;CK techniques each rule maps to.</p>
+        </header>
+        <div class="card">
+          <label class="visually-hidden" for="rules-filter">Filter rules</label>
+          <input type="search" id="rules-filter" class="search" placeholder="Filter by rule, technique or keyword">
+          <div id="rules-list" class="rules-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
